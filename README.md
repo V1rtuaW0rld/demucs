@@ -3,6 +3,7 @@
 Une interface web moderne et complète pour la séparation de pistes audio (stems) par IA et le traitement de voix studio, propulsée par **Demucs v4**, **Mel-Band Roformer**, **MDX-Net** et le moteur DSP **Pedalboard**.
 
 ---
+<img width="1389" height="930" alt="image" src="https://github.com/user-attachments/assets/ff7d9cde-dfae-4b83-90a5-af3863df27a0" />
 
 ## 🌟 Fonctionnalités
 
