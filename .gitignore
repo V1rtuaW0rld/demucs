@@ -181,3 +181,9 @@ tmp
 
 # app data
 data
+
+# Local test & scratch
+scratch/
+test_eq.py
+*.code-workspace
+

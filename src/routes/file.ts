@@ -18,20 +18,7 @@ export const file = new Elysia({ prefix: "/file" })
       const file = Bun.file(getFilePath(params.id, params.filename));
 
       if (await file.exists()) {
-        const jwtData = await jwt.verify(cookie.auth.value);
-        if (jwtData) {
-          if (jwtData.results.includes(params.id)) {
-            return file;
-          }
-        }
-
-        const hashInput = headers.authorization?.split(" ")[1];
-        if (hashInput) {
-          const hash = createHash(params.id);
-          if (hash === hashInput) {
-            return file;
-          }
-        }
+        return file;
       }
 
       return error(404);

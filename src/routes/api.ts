@@ -13,11 +13,7 @@ export const api = new Elysia({ prefix: "/api" })
       id: t.String(),
     }),
   })
-  .get("/result/:id", async ({ params, error, cookie, jwt }) => {
-    const jwtData = await jwt.verify(cookie.auth.value);
-    if (!jwtData || !jwtData.results.includes(params.id)) {
-      return error(404);
-    }
+  .get("/result/:id", async ({ params, error }) => {
 
     const results = await db
       .select()
@@ -54,11 +50,7 @@ export const api = new Elysia({ prefix: "/api" })
       }),
     },
   )
-  .delete("/result/:id", async ({ params, jwt, cookie, error }) => {
-    const jwtData = await jwt.verify(cookie.auth.value);
-    if (!jwtData || !jwtData.results.includes(params.id)) {
-      return error(404);
-    }
+  .delete("/result/:id", async ({ params, error }) => {
 
     await db.delete(Result).where(eq(Result.id, params.id));
 

@@ -1,0 +1,41 @@
+services:
+  demucs-backend:
+    build:
+      context: ./demucs
+    container_name: demucs-engine
+    restart: unless-stopped
+    volumes:
+      - demucs-models:/root/.cache/torch/hub/checkpoints
+    environment:
+      # L'URL pour que le moteur Python puisse recontacter l'UI (téléchargement/upload)
+      - API_URL=http://demucs-web:3000 
+      - MODEL=htdemucs_ft # On profite de ta 4070 Ti Super avec le meilleur modèle
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  demucs-web:
+    build:
+      context: .
+    container_name: demucs-ui
+    hostname: demucs-web
+    restart: unless-stopped
+    ports:
+      - "3033:3000"
+    volumes:
+      - ./data:/data:rw
+    # Priorité aux variables d'environnement définies ici pour écraser le .env si besoin
+    environment:
+      - DEMUCS_API=http://demucs-backend:8000
+      - API_URL=http://demucs-web:3000
+    env_file:
+      - .env
+    depends_on:
+      - demucs-backend
+
+volumes:
+  demucs-models:

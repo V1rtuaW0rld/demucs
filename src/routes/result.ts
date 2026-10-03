@@ -10,15 +10,14 @@ import { jwt } from "~/lib/jwt";
 export const result = new Elysia({ prefix: "/result" }).use(jwt).get(
   "/:id",
   async ({ cookie, jwt, params, error }) => {
-    const jwtData = await jwt.verify(cookie.auth.value);
-    if (!jwtData || !jwtData.results.includes(params.id)) {
-      return error(404);
-    }
-
     const results = await db
       .select()
       .from(Result)
       .where(eq(Result.id, params.id));
+
+    if (results.length === 0) {
+      return error(404);
+    }
     const result = results[0];
 
     return renderReact(

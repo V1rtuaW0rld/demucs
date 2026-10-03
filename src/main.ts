@@ -23,13 +23,7 @@ new Elysia()
       },
     }),
   )
-  .use(
-    staticPlugin({
-      assets: env.STATIC_DIR,
-      prefix: "/",
-      alwaysStatic: env.NODE_ENV === "production",
-    }),
-  )
+
   .use(cleanup)
   .use(jwt)
   .guard({
@@ -74,6 +68,13 @@ new Elysia()
   .use(result)
   .use(api)
   .use(file)
+  .use(
+    staticPlugin({
+      assets: env.STATIC_DIR,
+      prefix: "/",
+      alwaysStatic: env.NODE_ENV === "production",
+    }),
+  )
   .listen(env.PORT, (server) => {
     console.log(`demucs-web running at ${server.url.toString()}`);
   });

@@ -9,13 +9,15 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 flex h-14 w-full border-b border-[#0a0a0a1a] bg-background/50 backdrop-blur-md dark:border-[#e5e5e526] lg:px-4">
       <div className="container flex w-full items-center justify-between">
-        <a
-          className="flex items-center space-x-2 transition-opacity hover:opacity-80"
-          href="/"
-        >
-          <AudioLines size={16} />
-          <span className="font-medium">demucs-web</span>
-        </a>
+        <div className="flex items-center space-x-6">
+          <a
+            className="flex items-center space-x-2 transition-opacity hover:opacity-80"
+            href="/"
+          >
+            <AudioLines size={16} />
+            <span className="font-medium">Aura VoxStudio</span>
+          </a>
+        </div>
         <div className="flex items-center space-x-1">
           <GitHubLink />
           <ThemeToggle />

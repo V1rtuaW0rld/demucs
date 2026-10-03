@@ -22,34 +22,39 @@ interface ResultItemProps {
 }
 
 export default function ResultItem({ initialData }: ResultItemProps) {
-  const { id, name, status, twoStems, expiresAt } = useResult(initialData);
+  const { id, name, status, twoStems, createdAt, model } = useResult(initialData);
 
-  const timeUntilExpiration = useMemo(() => {
-    const expires =
-      typeof expiresAt === "object"
-        ? expiresAt.getTime()
-        : new Date(expiresAt).getTime();
-
-    const now = Date.now();
-    const diff = expires - now;
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    if (days > 0) {
-      return `${days} day${days > 1 ? "s" : ""}`;
+  const timeSinceCreation = useMemo(() => {
+    if (!createdAt) {
+      // Fallback for old records without createdAt
+      return "long ago";
     }
 
-    const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
-    if (hours > 0) {
-      return `${hours} hour${hours > 1 ? "s" : ""}`;
-    }
+    try {
+      const created =
+        typeof createdAt === "object"
+          ? (createdAt as Date).getTime()
+          : new Date(createdAt).getTime();
 
-    const minutes = Math.floor(diff / (1000 * 60)) % 60;
-    if (minutes > 0) {
-      return `${minutes} minute${minutes > 1 ? "s" : ""}`;
-    }
+      if (isNaN(created)) return "unknown";
 
-    return "less than a minute";
-  }, [expiresAt]);
+      const now = Date.now();
+      const diff = now - created;
+
+      if (diff < 60000) return "just now";
+
+      const minutes = Math.floor(diff / (1000 * 60));
+      if (minutes < 60) return `${minutes}m ago`;
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      if (hours < 24) return `${hours}h ago`;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      return `${days}d ago`;
+    } catch (e) {
+      return "unknown";
+    }
+  }, [createdAt]);
 
   const goToResult = useCallback(() => {
     if (window.innerWidth < 640) {
@@ -68,11 +73,14 @@ export default function ResultItem({ initialData }: ResultItemProps) {
         </div>
         <div className="space-y-1.5">
           <p className={labelVariants()}>{name}</p>
-          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
             <div className="flex items-center gap-1 text-[0.8rem]">
               <ClockIcon className="h-[0.8rem] w-[0.8rem]" />
-              {timeUntilExpiration}
+              {timeSinceCreation}
             </div>
+            <span className="text-[0.7rem] bg-muted px-1 rounded opacity-70 truncate max-w-[100px]" title={model}>
+              {model}
+            </span>
             <div className="flex gap-1 *:h-[0.8rem] *:w-[0.8rem]">
               {twoStems ? (
                 <>

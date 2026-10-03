@@ -5,7 +5,6 @@ import { useDropzone } from "react-dropzone";
 import ChevronRight from "~/components/icons/chevron-right";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
-import { Switch } from "~/components/ui/switch";
 import { cn } from "~/lib/utils";
 
 export default function Form() {
@@ -70,9 +69,33 @@ export default function Form() {
         />
         <input {...getInputProps()} />
       </div>
-      <div className="flex items-center space-x-2">
-        <Switch id="two-stems" name="two_stems" defaultChecked />
-        <Label htmlFor="two-stems">Only separate vocals and instrumental</Label>
+      <div className="flex w-full max-w-sm flex-col space-y-2">
+        <Label htmlFor="model">Separation model</Label>
+        <select
+          name="model"
+          id="model"
+          defaultValue="htdemucs"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <optgroup label="Demucs (Multi-tracks)">
+            <option value="htdemucs">HTDemucs (4 tracks)</option>
+            <option value="htdemucs_ft">HTDemucs FT (4 tracks)</option>
+            <option value="htdemucs_6s">HTDemucs 6s (6 tracks)</option>
+            <option value="2stems">HTDemucs (2 tracks: Vocals/Instru)</option>
+          </optgroup>
+          <optgroup label="MDX (Premium Vocals/Instru)">
+            <option value="MDX23C-8KFFT-InstVoc_HQ.ckpt">MDX23C (Ultra High Quality)</option>
+            <option value="Kim_Vocal_2.onnx">Kim Vocal 2 (High Quality)</option>
+          </optgroup>
+          <optgroup label="Roformer (State of the Art)">
+            <option value="model_bs_roformer_ep_317_sdr_12.9755.ckpt">BS-Roformer (Viper 1297)</option>
+            <option value="model_mel_band_roformer_ep_3005_sdr_11.4360.ckpt">Mel-Roformer (Viper 1143)</option>
+          </optgroup>
+          <optgroup label="Specialized Models">
+            <option value="kuielab_a_drums.onnx">MDX Drums (Cleanest)</option>
+            <option value="kuielab_a_bass.onnx">MDX Bass (Solid)</option>
+          </optgroup>
+        </select>
       </div>
       <Button className="group" type="submit">
         Separate <ChevronRight />
